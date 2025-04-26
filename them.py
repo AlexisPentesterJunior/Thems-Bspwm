@@ -80,47 +80,13 @@ def menu_temas():
     print("\n5 -> No Disponible ")
     print("\n6 -> Salir ")
 
-# =============== Main ========================
-def main_temas()
-    while True:
-        clear_console()
-        banner()
-        menu_temas()
-        blue()
-        opcion = input("\n Ingrese el número del tema que desea seleccionar: ")
-        valid_options = {"1", "2", "3", "4", "6"}
-
-        if opcion not in valid_options:
-            blue()
-            print(f"\n Opción inválida: {opcion}")
-            input("\n Presione Enter para intentar de nuevo...")
-            continue
-        else:
-            if opcion == "1":
-                s4vitar_kali()
-            elif opcion == "2":
-                ()
-            elif opcion == "3":
-                ()
-            elif opcion == "4":
-                ()
-            elif opcion == "5":
-                ()
-            elif opcion == "6":
-                clear_console()
-                blue()
-                print("\n[+] Gracias por usar el selector de tema. ¡Hasta luego!")
-                reset_color()
-                sys.exit(0)
-            blue()
-            input("\n Presione Enter para continuar...")
-
 # ============== Instalacion ==================
 def s4vitar_kali():
     blue(); print("[+] Instalando el tema S4vitar en Kali Linux ..."); reset_color()
     actualizar_kali()
-    deps = ("")
-    run_command(f"sudo apt install -y {deps}")
+    # No dependencies specified, so skipping apt install
+    # deps = ("")
+    # run_command(f"sudo apt install -y {deps}")
 
     branch_name = "s4vitar-kali"
     repo_dir = os.getcwd()
@@ -133,7 +99,53 @@ def s4vitar_kali():
 
 def s4vitar_parrot():
     print("\n[+] Instalando el tema S4vitar en Parrot OS ...")
+    # TODO: Implement installation steps for Parrot OS
     print("[✔] Instalación del tema S4vitar completa.")
 
+def s4vitar_opcion3():
+    print("\n[+] Instalando el tema para opción 3... (No implementado)")
+
+def s4vitar_opcion4():
+    print("\n[+] Instalando el tema para opción 4... (No implementado)")
+
+def s4vitar_opcion5():
+    print("\n[+] Instalando el tema para opción 5... (No implementado)")
+
+# =============== Main ========================
+def main_temas():
+    while True:
+        clear_console()
+        banner()
+        menu_temas()
+        blue()
+        opcion = input("\n Ingrese el número del tema que desea seleccionar: ")
+        valid_options = {"1", "2", "3", "4", "5", "6"}
+
+        if opcion not in valid_options:
+            blue()
+            print(f"\n Opción inválida: {opcion}")
+            input("\n Presione Enter para intentar de nuevo...")
+            continue
+        else:
+            if opcion == "1":
+                s4vitar_kali()
+            elif opcion == "2":
+                s4vitar_parrot()
+            elif opcion == "3":
+                s4vitar_opcion3()
+            elif opcion == "4":
+                s4vitar_opcion4()
+            elif opcion == "5":
+                s4vitar_opcion5()
+            elif opcion == "6":
+                clear_console()
+                blue()
+                print("\n[+] Gracias por usar el selector de tema. ¡Hasta luego!")
+                reset_color()
+                sys.exit(0)
+            
+            blue()
+            input("\n Presione Enter para continuar...")
+
 if __name__ == "__main__":
-    main()
+    main_temas()
