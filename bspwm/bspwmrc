@@ -1,0 +1,38 @@
+#! /bin/sh
+
+# Set window manager name for Java applications compatibility
+wmname LG3D &
+
+# Start VMware user wrapper if available
+vmware-user-suid-wrapper &
+
+# Start sxhkd if not already running
+pgrep -x sxhkd > /dev/null || sxhkd &
+
+# Define desktops
+bspc monitor -d I II III IV V VI VII VIII IX X
+
+# Window border and gap settings
+bspc config border_width         2
+bspc config window_gap          12
+
+# Split ratio for tiled windows
+bspc config split_ratio          0.52
+
+# Monocle mode settings
+bspc config borderless_monocle   true
+bspc config gapless_monocle      true
+
+# Focus and pointer behavior
+bspc config focus_follows_mouse  true
+bspc config pointer_follows_focus true
+
+# Application specific rules
+bspc rule -a Gimp desktop='^8' state=floating follow=on
+bspc rule -a Chromium desktop='^2'
+bspc rule -a mplayer2 state=floating
+bspc rule -a Kupfer.py focus=on
+bspc rule -a Screenkey manage=off
+
+# Set wallpaper using feh; update the path to your wallpaper image
+feh --bg-fill "$HOME/Pictures/wallpaper.jpg" || echo "Wallpaper not found, please update the path in bspwmrc"
