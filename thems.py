@@ -44,13 +44,14 @@ def actualizar_kali():
     run_command("sudo apt update -y && sudo apt upgrade -y")
 
 # =============== Función para clonar y renombrar rama ====================
-def clone_and_rename_branch(repo_url, remote_branch, local_branch):
+def clone_and_rename_branch(repo_url, remote_branch, local_branch, new_repo_name):
     """
-    Clona un repositorio y renombra la rama clonada localmente a un nombre especificado.
+    Clona un repositorio, renombra el directorio del repositorio y renombra la rama clonada localmente a un nombre especificado.
     
     :param repo_url: URL del repositorio Git.
     :param remote_branch: Nombre de la rama remota a clonar.
     :param local_branch: Nuevo nombre para la rama local.
+    :param new_repo_name: Nuevo nombre para el directorio del repositorio.
     """
     try:
         # Clonamos el repositorio con la rama remota especificada
@@ -60,14 +61,19 @@ def clone_and_rename_branch(repo_url, remote_branch, local_branch):
         # Obtener el nombre del repositorio de la URL para usarlo como nombre de carpeta
         repo_name = repo_url.split('/')[-1].replace(".git", "")
         repo_path = os.path.join(os.getcwd(), repo_name)
-        
+
         # Verificar si el directorio existe antes de intentar cambiar a él
         if not os.path.isdir(repo_path):
             print(f"[!] Error: El directorio {repo_path} no se creó correctamente.")
             return
         
-        # Cambiar al directorio del repositorio clonado
-        os.chdir(repo_path)
+        # Renombrar el directorio del repositorio clonado
+        new_repo_path = os.path.join(os.getcwd(), new_repo_name)
+        os.rename(repo_path, new_repo_path)  # Renombrar el directorio
+        print(f"[✔] El directorio del repositorio ha sido renombrado a: {new_repo_name}")
+
+        # Cambiar al directorio del repositorio renombrado
+        os.chdir(new_repo_path)
 
         # Verificar si la rama local ya existe para evitar conflictos
         result = subprocess.run(f"git branch --list {local_branch}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -80,7 +86,7 @@ def clone_and_rename_branch(repo_url, remote_branch, local_branch):
         print(f"[✔] Repositorio clonado y rama local renombrada a '{local_branch}'.")
     
     except Exception as e:
-        print(f"[!] Error al clonar o renombrar la rama: {e}")
+        print(f"[!] Error al clonar, renombrar el repositorio o la rama: {e}")
 
 # =============== Menú de Selección de Temas ==================
 def banner():
@@ -147,13 +153,10 @@ def main_temas():
 def s4vitar_kali():
     print("\n[+] Instalando el tema S4vitar en Kali Linux ...")
 
-    # URL fija del repositorio
     repo_url = "https://github.com/AlexisPentesterJunior/Thems-Bspwm.git"
-    # Nombre de la rama remota a clonar (fijo)
     remote_branch = "s4vitar-kali"
-    # Nombre de la rama local fijo
     local_branch = "s4vitar-kali"
-    # Llamamos a la función para clonar y renombrar la rama
+    new_repo_name = "dotfiles"
     clone_and_rename_branch(repo_url, remote_branch, local_branch)
 
     print("[✔] Instalación del tema S4vitar completa.")
