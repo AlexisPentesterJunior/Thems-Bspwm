@@ -44,17 +44,17 @@ def actualizar_kali():
     run_command("sudo apt update -y && sudo apt upgrade -y")
 
 # =============== Función para clonar y renombrar rama ====================
-def clone_and_rename_branch(repo_url, branch_name, new_branch_name):
+def clone_and_rename_branch(repo_url, remote_branch, local_branch):
     """
-    Clona un repositorio y renombra la rama clonada.
+    Clona un repositorio y renombra la rama clonada localmente a un nombre especificado.
     
     :param repo_url: URL del repositorio Git.
-    :param branch_name: Nombre de la rama a clonar.
-    :param new_branch_name: Nuevo nombre para la rama local.
+    :param remote_branch: Nombre de la rama remota a clonar.
+    :param local_branch: Nuevo nombre para la rama local.
     """
     try:
-        # Clonamos el repositorio con la rama especificada
-        run_command(f"git clone --branch {branch_name} {repo_url}")
+        # Clonamos el repositorio con la rama remota especificada
+        run_command(f"git clone --branch {remote_branch} {repo_url}")
         
         # Obtenemos el nombre del repositorio de la URL para hacer cd en la carpeta
         repo_name = repo_url.split('/')[-1].replace(".git", "")
@@ -64,10 +64,10 @@ def clone_and_rename_branch(repo_url, branch_name, new_branch_name):
         os.chdir(repo_path)
 
         # Renombrar la rama local
-        run_command(f"git checkout -b {new_branch_name} {branch_name}")
+        run_command(f"git checkout -b {local_branch} {remote_branch}")
         
         green()
-        print(f"[✔] Repositorio clonado y rama renombrada a {new_branch_name}.")
+        print(f"[✔] Repositorio clonado y rama local renombrada a '{local_branch}'.")
         reset_color()
 
     except Exception as e:
@@ -139,14 +139,19 @@ def main_temas():
 # ============== Instalación ==================
 def s4vitar_kali():
     print("\n[+] Instalando el tema S4vitar en Kali Linux ...")
-
-    # Agregar la funcionalidad de clonar un repositorio y renombrar la rama aquí
+    
+    # URL fija del repositorio
     repo_url = "https://github.com/AlexisPentesterJunior/Thems-Bspwm.git"
-    branch_name = "s4vitar-kali"
-    new_branch_name = "s4vitar-kali"
-
+    
+    # Nombre de la rama remota a clonar (fijo)
+    remote_branch = "s4vitar-kali"
+    
+    # Nombre de la rama local fijo
+    local_branch = "s4vitar-kali"
+    
     # Llamamos a la función para clonar y renombrar la rama
-    clone_and_rename_branch(repo_url, branch_name, new_branch_name)
+    clone_and_rename_branch(repo_url, remote_branch, local_branch)
+    
     print("[✔] Instalación del tema S4vitar completa.")
 
 def s4vitar_parrot():
