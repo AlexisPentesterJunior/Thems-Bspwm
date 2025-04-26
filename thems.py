@@ -1,22 +1,28 @@
 import os
 import platform
-import shutil
+import subprocess
 import signal
 import sys
-import subprocess
-from datetime import datetime
 from sys import stdout
+import shutil
+from datetime import datetime
 
 # =============== Utilidades =================
 def run_command(command, cwd=None):
+    """Ejecuta un comando en la terminal y maneja errores."""
     try:
         subprocess.run(command, shell=True, check=True, cwd=cwd)
     except subprocess.CalledProcessError as e:
         red()
         print(f"[!] Error al ejecutar: {command}\nDetalles: {e}")
         reset_color()
+    except Exception as e:
+        red()
+        print(f"[!] Error inesperado: {e}")
+        reset_color()
 
 def clear_console():
+    """Limpia la consola dependiendo del sistema operativo."""
     os.system("cls" if platform.system() == "Windows" else "clear")
 
 # =============== Colores ====================
@@ -36,29 +42,44 @@ def signal_handler(sig, frame):
 signal.signal(signal.SIGINT, signal_handler)
 
 # =============== Funciones para Git ========================
-#def checkout_branch(branch, cwd=None):
-#    """Realiza un git checkout de la rama especificada."""
-#    print(f"[+] Cambiando a la rama '{branch}'...")
-#    run_command(f"git checkout {branch}", cwd=cwd)
-
-#def download_branch(branch, cwd=None):
-#    """Descarga las ramas necesarias."""
-#    print(f"[+] Descargando los archivos de la rama '{branch}'...")
-#    run_command(f"git pull origin {branch}", cwd=cwd)
-
-# Función para traer y actualizar archivos de una rama remota sin cambiar la rama actual
 def fetch_and_update_branch(branch_name, cwd=None):
+    """Actualiza los archivos de una rama remota sin cambiar la rama actual y mueve los archivos a un directorio con el nombre de la rama."""
     print(f"[+] Actualizando los archivos de la rama remota '{branch_name}'...")
+
+    # Crear el directorio con el nombre de la rama
+    branch_dir = os.path.join(cwd, branch_name)
+    if not os.path.exists(branch_dir):
+        os.makedirs(branch_dir)
+    else:
+        # Si el directorio ya existe, agregar un número al final para evitar sobrescribir
+        i = 1
+        while os.path.exists(f"{branch_dir}_{i}"):
+            i += 1
+        branch_dir = f"{branch_dir}_{i}"
+        os.makedirs(branch_dir)
+
+    # Ejecutar git fetch y reset
     run_command(f"git fetch origin {branch_name}", cwd=cwd)
     run_command(f"git reset --hard origin/{branch_name}", cwd=cwd)
+    
+    # Mover los archivos actualizados al nuevo directorio
+    for filename in os.listdir(cwd):
+        file_path = os.path.join(cwd, filename)
+        if os.path.isfile(file_path):
+            shutil.move(file_path, os.path.join(branch_dir, filename))
+
+    green()
+    print(f"[✔] Archivos de la rama '{branch_name}' movidos a '{branch_dir}'. Instalación completa.")
 
 # ============== Sistema =====================
 def actualizar_kali():
+    """Actualiza Kali Linux con apt."""
     run_command("sudo apt update -y && sudo apt upgrade -y")
 
 # =============== Menú de Selección de Temas ==================
 def banner():
-    banner = """
+    """Muestra el banner de bienvenida."""
+    banner_text = """
     ████████╗███████╗███╗   ███╗ █████╗ ███████
     ╚══██╔══╝██╔════╝████╗ ████║██╔══██╗██╔════
        ██║   █████╗  ██╔████╔██║███████║███████╗
@@ -67,13 +88,14 @@ def banner():
        ╚═╝   ╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝
     """
     red()
-    print(banner)
+    print(banner_text)
 
 def menu_temas():
+    """Muestra el menú de selección de temas."""
     blue()
-    print("[+] Seleccione el tema a instalar segun su sistema operativo [+]")
+    print("[+] Seleccione el tema a instalar según su sistema operativo [+]")
     green()
-    print("\n1 -> S4vitar (Kalli Linux) ")
+    print("\n1 -> S4vitar (Kali Linux) ")
     print("\n2 -> S4vitar (Parrot OS) ")
     print("\n3 -> No Disponible ")
     print("\n4 -> No Disponible ")
@@ -82,18 +104,19 @@ def menu_temas():
 
 # =============== Main ========================
 def main_temas():
+    """Función principal que ejecuta el menú y las opciones seleccionadas."""
     while True:
         clear_console()
         banner()
         menu_temas()
         blue()
-        opcion = input("\n Ingrese el número del tema que desea seleccionar: ")
+        opcion = input("\nIngrese el número del tema que desea seleccionar: ")
         valid_options = {"1", "2", "3", "4", "5", "6"}
 
         if opcion not in valid_options:
             blue()
-            print(f"\n Opción inválida: {opcion}")
-            input("\n Presione Enter para intentar de nuevo...")
+            print(f"\nOpción inválida: {opcion}")
+            input("\nPresione Enter para intentar de nuevo...")
             continue
         else:
             if opcion == "1":
@@ -114,39 +137,34 @@ def main_temas():
                 sys.exit(0)
             
             blue()
-            input("\n Presione Enter para continuar...")
+            input("\nPresione Enter para continuar...")
 
-# ============== Instalacion ==================
+# ============== Instalación ==================
 def s4vitar_kali():
+    """Instala el tema S4vitar en Kali Linux."""
     blue(); print("[+] Instalando el tema S4vitar en Kali Linux ..."); reset_color()
     actualizar_kali()
-    # No dependencies specified, so skipping apt install
-    # deps = ("")
-    # run_command(f"sudo apt install -y {deps}")
-
     branch_name = "s4vitar-kali"
     repo_dir = os.getcwd()
     fetch_and_update_branch(branch_name, cwd=repo_dir)
-    #checkout_branch(branch_name, cwd=repo_dir)
-    # Por ejemplo, si hay archivos de configuración que mover:
-    # run_command(f"cp -r {repo_dir}/config/* ~/.config/")
-    green()
-    print("[✔] Instalación del tema S4vitar completa.")
 
 def s4vitar_parrot():
+    """Instala el tema S4vitar en Parrot OS (pendiente de implementación)."""
     print("\n[+] Instalando el tema S4vitar en Parrot OS ...")
     # TODO: Implement installation steps for Parrot OS
     print("[✔] Instalación del tema S4vitar completa.")
 
 def s4vitar_opcion3():
+    """Instala el tema para opción 3 (pendiente de implementación)."""
     print("\n[+] Instalando el tema para opción 3... (No implementado)")
 
 def s4vitar_opcion4():
+    """Instala el tema para opción 4 (pendiente de implementación)."""
     print("\n[+] Instalando el tema para opción 4... (No implementado)")
 
 def s4vitar_opcion5():
+    """Instala el tema para opción 5 (pendiente de implementación)."""
     print("\n[+] Instalando el tema para opción 5... (No implementado)")
-
 
 if __name__ == "__main__":
     main_temas()
