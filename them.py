@@ -36,73 +36,102 @@ def signal_handler(sig, frame):
 signal.signal(signal.SIGINT, signal_handler)
 
 # =============== Funciones para Git ========================
-def checkout_branch(branch, cwd=None):
-    """Realiza un git checkout de la rama especificada."""
-    print(f"[+] Cambiando a la rama '{branch}'...")
-    run_command(f"git checkout {branch}", cwd=cwd)
+#def checkout_branch(branch, cwd=None):
+#    """Realiza un git checkout de la rama especificada."""
+#    print(f"[+] Cambiando a la rama '{branch}'...")
+#    run_command(f"git checkout {branch}", cwd=cwd)
 
-def download_branch(branch, cwd=None):
-    """Descarga las ramas necesarias."""
-    print(f"[+] Descargando los archivos de la rama '{branch}'...")
-    run_command(f"git pull origin {branch}", cwd=cwd)
+#def download_branch(branch, cwd=None):
+#    """Descarga las ramas necesarias."""
+#    print(f"[+] Descargando los archivos de la rama '{branch}'...")
+#    run_command(f"git pull origin {branch}", cwd=cwd)
+
+# Función para traer y actualizar archivos de una rama remota sin cambiar la rama actual
+def fetch_and_update_branch(branch_name, cwd=None):
+    print(f"[+] Actualizando los archivos de la rama remota '{branch_name}'...")
+    run_command(f"git fetch origin {branch_name}", cwd=cwd)
+    run_command(f"git reset --hard origin/{branch_name}", cwd=cwd)
+
+# ============== Sistema =====================
+def actualizar_kali():
+    run_command("sudo apt update -y && sudo apt upgrade -y")
 
 # =============== Menú de Selección de Temas ==================
-def mostrar_menu_temas():
-    print("\n[+] Selecciona los temas que deseas instalar:")
-    print("1. Tema A (rama 's4vitar')")
-    print("2. Tema B (rama 'theme-b')")
-    print("3. Tema C (rama 'theme-c')")
-    print("4. Todos los temas")
-    print("0. Salir")
+def banner():
+    banner = """
+    ████████╗███████╗███╗   ███╗ █████╗ ███████
+    ╚══██╔══╝██╔════╝████╗ ████║██╔══██╗██╔════
+       ██║   █████╗  ██╔████╔██║███████║███████╗
+       ██║   ██╔══╝  ██║╚██╔╝██║██╔══██║╚════██║
+       ██║   ███████╗██║ ╚═╝ ██║██║  ██║███████║
+       ╚═╝   ╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝
+    """
+    red()
+    print(banner)
 
-def obtener_seleccion_usuario():
-    """Obtiene la selección del usuario del menú."""
-    try:
-        seleccion = int(input("\n[+] Ingresa el número de tu selección: "))
-        return seleccion
-    except ValueError:
-        red()
-        print("[!] Por favor ingresa un número válido.")
-        reset_color()
-        return None
-
-def procesar_seleccion(seleccion, cwd):
-    """Procesa la selección del usuario y realiza el checkout de las ramas necesarias."""
-    if seleccion == 1:
-        checkout_branch("s4vitar", cwd)
-        download_branch("s4vitar", cwd)
-    elif seleccion == 2:
-        checkout_branch("theme-b", cwd)
-        download_branch("theme-b", cwd)
-    elif seleccion == 3:
-        checkout_branch("theme-c", cwd)
-        download_branch("theme-c", cwd)
-    elif seleccion == 4:
-        # Descargar todos los temas
-        for branch in ["s4vitar", "theme-b", "theme-c"]:
-            checkout_branch(branch, cwd)
-            download_branch(branch, cwd)
-    elif seleccion == 0:
-        print("[+] Saliendo del instalador.")
-        sys.exit(0)
-    else:
-        red()
-        print("[!] Selección no válida. Intenta nuevamente.")
-        reset_color()
+def menu_temas():
+    blue()
+    print("[+] Seleccione el tema a instalar segun su sistema operativo [+]")
+    green()
+    print("\n1 -> S4vitar (Kalli Linux) ")
+    print("\n2 -> S4vitar (Parrot OS) ")
+    print("\n3 -> No Disponible ")
+    print("\n4 -> No Disponible ")
+    print("\n5 -> No Disponible ")
+    print("\n6 -> Salir ")
 
 # =============== Main ========================
-def main():
+def main_temas()
     clear_console()
-    print("\n[+] Instalador de temas")
+    banner()
+    menu_temas()
+    blue()
+    opcion = input("\n Ingrese el número del tema que desea seleccionar: ")
+    valid_options = {"1", "2", "3", "4", "6"}
 
-    # Obtener el directorio donde se ejecuta el script
-    cwd = os.getcwd()
+    if opcion not in valid_options:
+        blue()
+        print(f"\n Opción inválida: {opcion}")
+        input("\n Presione Enter para intentar de nuevo...")
+        continue
+        if opcion == "1":
+            s4vitar_kali()
+        elif opcion == "2":
+            ()
+        elif opcion == "3":
+            ()
+        elif opcion == "4":
+            ()
+        elif opcion == "5":
+            ()
+        elif opcion == "6":
+            clear_console()
+            blue()
+            print("\n[+] Gracias por usar el selector de tema. ¡Hasta luego!")
+            reset_color()
+            sys.exit(0)  # Sale del programa
+        blue()
+        input("\n Presione Enter para continuar...")
 
-    while True:
-        mostrar_menu_temas()
-        seleccion = obtener_seleccion_usuario()
-        if seleccion is not None:
-            procesar_seleccion(seleccion, cwd)
+# ============== Instalacion ==================
+def s4vitar_kali():
+    blue(); print("[+] Instalando el tema S4vitar en Kali Linux ..."); reset_color()
+    actualizar_kali()
+    deps = ("")
+    run_command(f"sudo apt install -y {deps}")
+
+    branch_name = "s4vitar-kali"
+    repo_dir = os.getcwd()
+    fetch_and_update_branch(branch_name, cwd=repo_dir)
+    #checkout_branch(branch_name, cwd=repo_dir)
+    # Por ejemplo, si hay archivos de configuración que mover:
+    # run_command(f"cp -r {repo_dir}/config/* ~/.config/")
+    green()
+    print("[✔] Instalación del tema S4vitar completa.")
+
+def s4vitar_parrot():
+    print("\n[+] Instalando el tema S4vitar en Parrot OS ...")
+    print("[✔] Instalación del tema S4vitar completa.")
 
 if __name__ == "__main__":
     main()
