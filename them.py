@@ -80,37 +80,6 @@ def menu_temas():
     print("\n5 -> No Disponible ")
     print("\n6 -> Salir ")
 
-# ============== Instalacion ==================
-def s4vitar_kali():
-    blue(); print("[+] Instalando el tema S4vitar en Kali Linux ..."); reset_color()
-    actualizar_kali()
-    # No dependencies specified, so skipping apt install
-    # deps = ("")
-    # run_command(f"sudo apt install -y {deps}")
-
-    branch_name = "s4vitar-kali"
-    repo_dir = os.getcwd()
-    fetch_and_update_branch(branch_name, cwd=repo_dir)
-    #checkout_branch(branch_name, cwd=repo_dir)
-    # Por ejemplo, si hay archivos de configuración que mover:
-    # run_command(f"cp -r {repo_dir}/config/* ~/.config/")
-    green()
-    print("[✔] Instalación del tema S4vitar completa.")
-
-def s4vitar_parrot():
-    print("\n[+] Instalando el tema S4vitar en Parrot OS ...")
-    # TODO: Implement installation steps for Parrot OS
-    print("[✔] Instalación del tema S4vitar completa.")
-
-def s4vitar_opcion3():
-    print("\n[+] Instalando el tema para opción 3... (No implementado)")
-
-def s4vitar_opcion4():
-    print("\n[+] Instalando el tema para opción 4... (No implementado)")
-
-def s4vitar_opcion5():
-    print("\n[+] Instalando el tema para opción 5... (No implementado)")
-
 # =============== Main ========================
 def main_temas():
     while True:
@@ -146,6 +115,38 @@ def main_temas():
             
             blue()
             input("\n Presione Enter para continuar...")
+
+# ============== Instalacion ==================
+def s4vitar_kali():
+    blue(); print("[+] Instalando el tema S4vitar en Kali Linux ..."); reset_color()
+    actualizar_kali()
+    # No dependencies specified, so skipping apt install
+    # deps = ("")
+    # run_command(f"sudo apt install -y {deps}")
+
+    branch_name = "s4vitar-kali"
+    repo_dir = os.getcwd()
+    fetch_and_update_branch(branch_name, cwd=repo_dir)
+    #checkout_branch(branch_name, cwd=repo_dir)
+    # Por ejemplo, si hay archivos de configuración que mover:
+    # run_command(f"cp -r {repo_dir}/config/* ~/.config/")
+    green()
+    print("[✔] Instalación del tema S4vitar completa.")
+
+def s4vitar_parrot():
+    print("\n[+] Instalando el tema S4vitar en Parrot OS ...")
+    # TODO: Implement installation steps for Parrot OS
+    print("[✔] Instalación del tema S4vitar completa.")
+
+def s4vitar_opcion3():
+    print("\n[+] Instalando el tema para opción 3... (No implementado)")
+
+def s4vitar_opcion4():
+    print("\n[+] Instalando el tema para opción 4... (No implementado)")
+
+def s4vitar_opcion5():
+    print("\n[+] Instalando el tema para opción 5... (No implementado)")
+
 
 if __name__ == "__main__":
     main_temas()
