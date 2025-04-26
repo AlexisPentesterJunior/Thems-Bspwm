@@ -82,36 +82,38 @@ def menu_temas():
 
 # =============== Main ========================
 def main_temas()
-    clear_console()
-    banner()
-    menu_temas()
-    blue()
-    opcion = input("\n Ingrese el número del tema que desea seleccionar: ")
-    valid_options = {"1", "2", "3", "4", "6"}
+    while True:
+        clear_console()
+        banner()
+        menu_temas()
+        blue()
+        opcion = input("\n Ingrese el número del tema que desea seleccionar: ")
+        valid_options = {"1", "2", "3", "4", "6"}
 
-    if opcion not in valid_options:
-        blue()
-        print(f"\n Opción inválida: {opcion}")
-        input("\n Presione Enter para intentar de nuevo...")
-        continue
-        if opcion == "1":
-            s4vitar_kali()
-        elif opcion == "2":
-            ()
-        elif opcion == "3":
-            ()
-        elif opcion == "4":
-            ()
-        elif opcion == "5":
-            ()
-        elif opcion == "6":
-            clear_console()
+        if opcion not in valid_options:
             blue()
-            print("\n[+] Gracias por usar el selector de tema. ¡Hasta luego!")
-            reset_color()
-            sys.exit(0)  # Sale del programa
-        blue()
-        input("\n Presione Enter para continuar...")
+            print(f"\n Opción inválida: {opcion}")
+            input("\n Presione Enter para intentar de nuevo...")
+            continue
+        else:
+            if opcion == "1":
+                s4vitar_kali()
+            elif opcion == "2":
+                ()
+            elif opcion == "3":
+                ()
+            elif opcion == "4":
+                ()
+            elif opcion == "5":
+                ()
+            elif opcion == "6":
+                clear_console()
+                blue()
+                print("\n[+] Gracias por usar el selector de tema. ¡Hasta luego!")
+                reset_color()
+                sys.exit(0)
+            blue()
+            input("\n Presione Enter para continuar...")
 
 # ============== Instalacion ==================
 def s4vitar_kali():
