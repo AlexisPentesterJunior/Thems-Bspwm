@@ -1,0 +1,97 @@
+#!/bin/sh
+
+# ================================================
+# BSPWM Environment Configuration and Execution
+# ================================================
+
+# Set the Window Manager name (for Java app compatibility)
+wmname LG3D &
+
+# VMware tools (if necessary)
+vmware-user-suid-wrapper &
+
+# ================================================
+# Start Tools and Daemons
+# ================================================
+
+# Start sxhkd if it's not already running (keyboard shortcuts manager)
+pgrep -x sxhkd > /dev/null || sxhkd &
+
+# Start Polybar
+~/.config/polybar/launch.sh &
+
+# Start Picom (window compositor)
+picom &
+
+# ================================================
+# BSPWM Configuration
+# ================================================
+
+# Set up workspaces for BSPWM
+bspc monitor -d I II III IV V VI VII VIII IX X
+
+# Window style and behavior configuration
+bspc config border_width 2
+bspc config window_gap 12
+bspc config split_ratio 0.52
+bspc config borderless_monocle true
+bspc config gapless_monocle true
+
+# Specific window rules
+bspc rule -a Gimp desktop='^8' state=floating follow=on
+bspc rule -a Chromium desktop='^2'
+bspc rule -a mplayer2 state=floating
+bspc rule -a Kupfer.py focus=on
+bspc rule -a Screenkey manage=off
+
+# ================================================
+# Set the Wallpaper
+# ================================================
+
+# Wallpaper directory
+WALLPAPER_DIR="$HOME/Pictures/wallpapers"
+
+# Function to change wallpaper randomly
+change_wallpaper() {
+  if [ -d "$WALLPAPER_DIR" ]; then
+    # Select a random image from the folder and set it as the background
+    feh --randomize --bg-fill "$WALLPAPER_DIR"/*
+  else
+    echo "Wallpaper directory not found: $WALLPAPER_DIR"
+  fi
+}
+
+# Change wallpaper initially when starting
+change_wallpaper
+
+# Wallpaper change interval in seconds (e.g., 10 minutes = 600 seconds)
+INTERVAL=600
+
+# Loop to change the wallpaper every INTERVAL seconds
+change_wallpaper_periodically() {
+  while true; do
+    change_wallpaper
+    sleep $INTERVAL
+  done &
+}
+
+# Start periodic wallpaper changes
+change_wallpaper_periodically
+
+# ================================================
+# Additional Configuration
+# ================================================
+
+# Set default cursor
+xsetroot -cursor_name left_ptr
+
+# Set window focus behavior
+bspc config focus_follows_pointer true
+
+# Set focus on desktop 1 (optional)
+bspc desktop '^1' --focus
+
+# Log any errors from Picom
+picom &> ~/.config/polybar/picom.log &
+
+# End of script
